@@ -2,6 +2,7 @@ import tensorflow as tf
 import numpy as np
 from numba import jit
 from time import time, sleep
+import pandas as pd
 import json
 
 class BenchMark:
@@ -22,10 +23,12 @@ class BenchMark:
 
     def get_2_bbxoes(self, num_boxes_in_1=10000, num_boxes_in_2=100000):
         """
-        :param num_boxes_in_1: int, numbers of boxes; max 10000
-        :param num_boxes_in_2: int, numbers of boxes; max 100000
+
+        :param num_boxes_in_1: int, numbers of boxes; max 10000, limitatino because of the GPU memory
+        :param num_boxes_in_2: int, numbers of boxes; max 100000, limitatino because of the GPU memory
         :return: boxes1, boxes2
         """
+        # generating random co-ordinates of [x1,y1,x2,y2]
         boxes1 = np.reshape(np.random.randint(high=1200, low=0, size=num_boxes_in_1 * 4), newshape=(num_boxes_in_1, 4))
         boxes2 = np.reshape(np.random.randint(high=1200, low=0, size=num_boxes_in_2 * 4), newshape=(num_boxes_in_2, 4))
         return boxes1, boxes2
@@ -163,11 +166,10 @@ class BenchMark:
         toc = time()
         return toc - tic
 
-    def analysis(self):
+    def analysis(self, box1_max=1001, box1_step=1, box2_max=10001, box2_step=10):
         row = list()
 
-        for num_boxes_in_1, num_boxes_in_2 in zip(range(1, 10001, 1), range(10, 100001, 10)):
-        # for num_boxes_in_1, num_boxes_in_2 in zip(range(1, 100, 1), range(1, 100, 10)):
+        for num_boxes_in_1, num_boxes_in_2 in zip(range(1, box1_max, box1_step), range(10, box2_max, box2_step)):
             print("num_boxes_in_1: {}, \t num_boxes_in_2: {}".format(num_boxes_in_1, num_boxes_in_2))
             each_row = dict()
 
@@ -186,3 +188,7 @@ class BenchMark:
         return row
 
 
+if __name__ == '__main__':
+    analysis = BenchMark().analysis()
+    df = pd.DataFrame(data=analysis)
+    df.to_csv("./analysis.csv", index=False)
