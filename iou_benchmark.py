@@ -64,7 +64,7 @@ class BenchMark:
         :return: corresponding IOU values
         """
 
-        @jit
+        @jit(nopython=True)
         def run(box, boxes):
             ww = np.maximum(np.minimum(box[0] + box[2], boxes[:, 0] + boxes[:, 2]) -
                             np.maximum(box[0], boxes[:, 0]),
@@ -109,7 +109,8 @@ class BenchMark:
         return toc - tic
 
     def np_vec_jit_iou(self, boxes1, boxes2):
-        @jit
+
+        @jit(nopython=True)
         def run(bboxes1, bboxes2):
             x11, y11, x12, y12 = np.split(bboxes1, 4, axis=1)
             x21, y21, x22, y22 = np.split(bboxes2, 4, axis=1)
