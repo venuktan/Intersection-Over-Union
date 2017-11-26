@@ -24,7 +24,6 @@ Tensor flow's runtime is pretty much constant all thru, and performs better when
 When the number of boxes are less than 100 the over head of copying the data to the GPU is greater than the processing time.
       
 Another interesting observation here is that the for loop version of IOU performs better that the vectorized version when the number of boxes is greater than 
-![alt text](inages/3.png)
-
+![alt text](images/3.png)
 
 
