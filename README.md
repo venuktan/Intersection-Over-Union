@@ -10,5 +10,9 @@ In this repo I vectorize IOU on multiple platforms and benchmark each in terms o
 - Tensor Flow 
 
 
-![alt text][https://github.com/venuktan/Intersection-Over-Union/blob/master/images/1.jpg]
+![alt text](https://github.com/venuktan/Intersection-Over-Union/blob/master/images/1.jpg)
+
+
+
+
 
