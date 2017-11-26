@@ -20,8 +20,8 @@ vectorized version runs better
 ![alt text](images/2.png)
 
 
-Tensor flow's runtime is pretty much constant all thru, and performs better when the number of boxes are greater than 100, 
-When the number of boxes are less than 100 the over head of copying the data to the GPU is greater than the processing time.
+Tensor flow's runtime is pretty much constant all thru, and performs better when the number of boxes are higher, 
+When the number of boxes are less the over head of copying the data to the GPU is greater than the processing time.
       
 Another interesting observation here is that the for loop version of IOU performs better that the vectorized version when the number of boxes is greater than 
 ![alt text](images/3.png)
