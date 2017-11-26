@@ -23,9 +23,8 @@ class BenchMark:
 
     def get_2_bbxoes(self, num_boxes_in_1=10000, num_boxes_in_2=100000):
         """
-
-        :param num_boxes_in_1: int, numbers of boxes; max 10000, limitatino because of the GPU memory
-        :param num_boxes_in_2: int, numbers of boxes; max 100000, limitatino because of the GPU memory
+        :param num_boxes_in_1: int, numbers of boxes; max 10000, limitation because of the GPU memory
+        :param num_boxes_in_2: int, numbers of boxes; max 100000, limitation because of the GPU memory
         :return: boxes1, boxes2
         """
         # generating random co-ordinates of [x1,y1,x2,y2]
@@ -112,8 +111,8 @@ class BenchMark:
 
         @jit(nopython=True)
         def run(bboxes1, bboxes2):
-            x11, y11, x12, y12 = np.split(bboxes1, 4, axis=1)
-            x21, y21, x22, y22 = np.split(bboxes2, 4, axis=1)
+            x11, y11, x12, y12 = bboxes1[:,0], bboxes1[:,1], bboxes1[:,2], bboxes1[:,3]
+            x21, y21, x22, y22 = bboxes2[:,0], bboxes2[:,1], bboxes2[:,2], bboxes2[:,3]
 
             # determine the (x, y)-coordinates of the intersection rectangle
             xA = np.maximum(x11, np.transpose(x21))
@@ -167,15 +166,14 @@ class BenchMark:
         toc = time()
         return toc - tic
 
-    def analysis(self, box1_max=1001, box1_step=1, box2_max=10001, box2_step=10):
+    def benchmark(self, box1_max=1001, box1_step=1, box2_max=10001, box2_step=10):
         row = list()
 
         for num_boxes_in_1, num_boxes_in_2 in zip(range(1, box1_max, box1_step), range(10, box2_max, box2_step)):
             print("num_boxes_in_1: {}, \t num_boxes_in_2: {}".format(num_boxes_in_1, num_boxes_in_2))
-            each_row = dict()
-
             boxes1, boxes2 = self.get_2_bbxoes(num_boxes_in_1, num_boxes_in_2)
 
+            each_row = dict()
             each_row.update({"box_A_size": num_boxes_in_1,
                              "box_B_size": num_boxes_in_2,
                              "1_np_no_vec_no_jit_iou": self.np_no_vec_no_jit_iou(boxes1, boxes2),
@@ -190,6 +188,6 @@ class BenchMark:
 
 
 if __name__ == '__main__':
-    analysis = BenchMark().analysis()
+    analysis = BenchMark().benchmark()
     df = pd.DataFrame(data=analysis)
     df.to_csv("./analysis.csv", index=False)
