@@ -109,10 +109,10 @@ class BenchMark:
 
     def np_vec_jit_iou(self, boxes1, boxes2):
 
-        @jit(nopython=True)
+        @jit
         def run(bboxes1, bboxes2):
-            x11, y11, x12, y12 = bboxes1[:,0], bboxes1[:,1], bboxes1[:,2], bboxes1[:,3]
-            x21, y21, x22, y22 = bboxes2[:,0], bboxes2[:,1], bboxes2[:,2], bboxes2[:,3]
+            x11, y11, x12, y12 = np.split(bboxes1, 4, axis=1)
+            x21, y21, x22, y22 = np.split(bboxes2, 4, axis=1)
 
             # determine the (x, y)-coordinates of the intersection rectangle
             xA = np.maximum(x11, np.transpose(x21))
@@ -166,10 +166,10 @@ class BenchMark:
         toc = time()
         return toc - tic
 
-    def benchmark(self, box1_max=1001, box1_step=1, box2_max=10001, box2_step=10):
+    def benchmark(self, box1_max=10001, box1_step=5, box2_max=10001, box2_step=5):
         row = list()
 
-        for num_boxes_in_1, num_boxes_in_2 in zip(range(1, box1_max, box1_step), range(10, box2_max, box2_step)):
+        for num_boxes_in_1, num_boxes_in_2 in zip(range(1, box1_max, box1_step), range(1, box2_max, box2_step)):
             print("num_boxes_in_1: {}, \t num_boxes_in_2: {}".format(num_boxes_in_1, num_boxes_in_2))
             boxes1, boxes2 = self.get_2_bbxoes(num_boxes_in_1, num_boxes_in_2)
 
